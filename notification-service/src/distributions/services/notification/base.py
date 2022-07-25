@@ -43,10 +43,9 @@ class BaseNotificaionClient(ABC):
         ...
 
 
-class DBNotificaionClient(BaseNotificaionClient):
+class NotificationClient(BaseNotificaionClient):
     def get_notifications(self, event_name: str) -> Generator[Notification, None, None]:
         for row in self.db.get_rows(event_name):
-            print("123", row)
             yield Notification(
                 id=row["notification_id"],
                 user_id=row["user_id"],

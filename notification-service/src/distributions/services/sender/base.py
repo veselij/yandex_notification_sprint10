@@ -3,7 +3,7 @@ from typing import Literal
 
 from distributions.services.userdata.base import UserData
 
-NotificationChannels = Literal["email", "dummy"]
+NotificationChannels = Literal["email", "sms"]
 
 
 class BaseSender(ABC):

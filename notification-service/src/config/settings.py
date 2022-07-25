@@ -16,7 +16,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-DEBUG = os.environ.get("DEBUG") == "True"
+DEBUG = os.environ.get("DEBUG", "True") == "True"
+FAKE_API = os.environ.get("FAKE_API", "True") == "True"
+FAKE_EMAIL_PROVIDER = os.environ.get("FAKE_EMAIL_PROVIDER", "True") == "True"
 
 
 ALLOWED_HOSTS = ["127.0.0.1"]
@@ -103,3 +105,12 @@ MONGO_COLLECTION = os.environ.get("MONGO_COLLECTION", "test_collection")
 # REDIS settings - should be replaced to RABBIT
 broker_host = os.environ.get("BROKER_HOST", "localhost")
 broker_port = int(os.environ.get("BROKER_PORT", 6379))
+
+# Auth API config
+AUTH_HOST = os.environ.get("AUTH_HOST", "localhost")
+AUTH_PORT = int(os.environ.get("AUTH_PORT", 82))
+AUTH_URL = "https://{AUTH_HOST}:{AUTH_PORT}/api/v1/user/{USER_ID}"
+
+# sendgrid token
+SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
+EMAIL = os.environ.get("EMAIL", "ealmina@yandex.ru")

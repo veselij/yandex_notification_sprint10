@@ -22,7 +22,7 @@ class MongoDBConnection(DBConnection):
         )
 
     def get_rows(self, event_name: str) -> Any:
-        return self.db.find({"notification_name": event_name})
+        return self.db.find({"notification_name": event_name}, max_time_ms=10000)
 
     def get_content(self, notification_id: str) -> Any:
-        return self.db.find_one({"notification_id": notification_id})
+        return self.db.find_one({"notification_id": notification_id}, max_time_ms=10000)
