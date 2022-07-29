@@ -1,0 +1,95 @@
+version: "3.9"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    hostname: rabbitmq
+    volumes:
+      - rabbit-data:/var/lib/rabbitmq/
+      - rabbit-log:/var/log/rabbitmq
+    networks:
+      - backend_nw
+
+  redis:
+    image: 'bitnami/redis:latest'
+    hostname: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - backend_nw
+
+  postgres:
+    image: postgres:13
+    hostname: postgres
+    env_file:
+      - .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - backend_nw
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongodb:
+    image: mongo
+    hostname: mongo
+    command: mongod --dbpath /data/db --port 27017
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - mongodb:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017 --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - backend_nw
+
+  notification-consumers:
+    build:
+      context: ../notification-consumers
+    networks:
+      - backend_nw
+    command: >
+      python main.py
+
+  notification-service-admin:
+    build:
+      context: ../notification-service
+    networks:
+      - backend_nw
+    env_file:
+      - .env
+    command: >
+      ./manage.py runserver 0.0.0.0:8000
+    depends_on:
+      rabbitmq:
+        condition: service_started
+      redis:
+        condition: service_started
+      mongodb:
+        condition: service_healthy
+
+  notification-service-worker:
+    build:
+      context: ../notification-service
+    networks:
+      - backend_nw
+    env_file:
+      - .env
+    command: >
+      celery -A config worker
+
+volumes:
+  postgres:
+  mongodb:
+  rabbit-data:
+  rabbit-log:
+
+networks:
+  backend_nw:
+    driver: bridge
