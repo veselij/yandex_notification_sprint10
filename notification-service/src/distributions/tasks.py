@@ -9,7 +9,6 @@ from distributions.services.notification.base import (
     NotificationResult,
 )
 from distributions.services.userdata import UserDataClient
-from distributions.services.userdata.base import UserData
 from distributions.tasks_base import MongoTaskWithRetry, RequestsTaskRetry
 from distributions.tasks_channels import notification_tasks_registry
 
