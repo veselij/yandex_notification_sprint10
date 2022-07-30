@@ -1,0 +1,90 @@
+version: "3.9"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    hostname: rabbitmq
+    volumes:
+      - rabbit-data:/var/lib/rabbitmq/
+      - rabbit-log:/var/log/rabbitmq
+
+  redis:
+    image: 'bitnami/redis:latest'
+    hostname: redis
+    expose:
+      - 6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+  postgres:
+    image: postgres:13
+    hostname: postgres
+    expose:
+      - 5432
+    env_file:
+      - .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongodb:
+    image: mongo
+    hostname: mongo
+    command: mongod --dbpath /data/db --port 27017
+    expose:
+      - 27017
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - mongodb:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017 --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  notification-consumers:
+    build:
+      context: ../notification-consumers
+    command: >
+      python main.py
+
+  notification-service-admin:
+    build:
+      context: ../notification-service
+    env_file:
+      - ../notification-service/.env
+    ports:
+      - 8000:8000
+    entrypoint:
+      "entrypoint.sh"
+    depends_on:
+      rabbitmq:
+        condition: service_started
+      redis:
+        condition: service_started
+      mongodb:
+        condition: service_healthy
+
+  notification-service-worker:
+    build:
+      context: ../notification-service
+    env_file:
+      - ../notification-service/.env
+    command: >
+      celery -A config -b "redis://redis:6379/0" worker -l DEBUG
+
+volumes:
+  postgres:
+  mongodb:
+  rabbit-data:
+  rabbit-log:
+
+networks:
+  default:
+    external:
+      name: netflix_nw
