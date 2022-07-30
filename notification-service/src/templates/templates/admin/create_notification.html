@@ -1,0 +1,11 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<form action="" method="post">{% csrf_token %}
+
+  {{ form }}
+
+  <input type="hidden" name="action" value="create_notification" />
+  <input type="submit" name="apply" value="Schedule"/>
+</form>
+{% endblock %}
