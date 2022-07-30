@@ -97,3 +97,4 @@ wcwidth==0.2.5
 wemake-python-styleguide==0.16.1
 wrapt==1.14.1
 gunicorn
+flake8-html
