@@ -1,13 +1,12 @@
 from functools import lru_cache
+
+from core.config import MONGODB_COLLECTION, MONGODB_DATABASE, MONGODB_URI
 from pymongo import MongoClient
-from typing import Optional
+from pymongo.collection import Collection
 
-from core.config import MONGODB_URI, MONGODB_DATABASE
-
-mongo_client: Optional[MongoClient] = MongoClient(MONGODB_URI)
+mongo_client: MongoClient = MongoClient(MONGODB_URI)
 
 
 @lru_cache
-def get_mongo() -> MongoClient:
-    if mongo_client:
-        return mongo_client[MONGODB_DATABASE]
+def get_mongo() -> Collection:
+    return mongo_client[MONGODB_DATABASE][MONGODB_COLLECTION]

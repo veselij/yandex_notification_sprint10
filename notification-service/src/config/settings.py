@@ -1,15 +1,12 @@
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
 from split_settings.tools import include
 
 include(
     "components/database.py",
     # "components/logging.py",
 )
-
-load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -92,6 +89,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+STATIC_ROOT = "static"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -102,7 +100,7 @@ MONGO_PORT = int(os.environ.get("MONGO_PORT", 27017))
 MONGO_DB = os.environ.get("MONGO_DB", "test_db")
 MONGO_COLLECTION = os.environ.get("MONGO_COLLECTION", "test_collection")
 
-# REDIS settings - should be replaced to RABBIT
+# REDIS settings
 broker_host = os.environ.get("BROKER_HOST", "localhost")
 broker_port = int(os.environ.get("BROKER_PORT", 6379))
 

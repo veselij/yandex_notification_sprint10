@@ -1,21 +1,20 @@
-import datetime
+from typing import Union
+
 from pydantic import BaseModel
-from typing import Optional
 
 
 class Message(BaseModel):
     notification_name: str
     user_id: str
-    template_id: Optional[str]
-    content_id: Optional[str]
-    content_value: Optional[str]
+    template_id: str
+    content_id: str
+    content_value: Union[str, int]
 
 
 class Notification(BaseModel):
     notification_id: str
     notification_name: str
     user_id: str
-    template_id: Optional[str]
-    content_id: Optional[str]
-    content_value: Optional[str]
-    last_updated: datetime.datetime
+    template_id: str
+    content_id: str
+    content_value: Union[str, int]

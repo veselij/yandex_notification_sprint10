@@ -1,16 +1,13 @@
 import json
-from datetime import datetime
 from uuid import uuid4
 
-from core.config import WELCOME_TEMPLATE_ID
 from infra.celery import celery_app
 from infra.mongodb import get_mongo
 from model import Message, Notification
 
 mongodb_client = get_mongo()
 
-NOTIFICATION_NAME = "new_user"
-CELERY_TASK_NAME = "distributions.tasks.schedule_notifications"
+CELERY_TASK_NAME = "distributions.tasks._schedule_notification"
 
 
 def callback(ch, method, properties, body):
@@ -18,15 +15,24 @@ def callback(ch, method, properties, body):
 
     notification = Notification(
         notification_id=str(uuid4()),
-        notification_name=NOTIFICATION_NAME,
+        notification_name=message.notification_name,
         user_id=message.user_id,
         content_id=message.content_id,
         content_value=message.content_value,
-        template_id=WELCOME_TEMPLATE_ID,
-        last_updated=datetime.now()
+        template_id=message.template_id,
     )
-    result = mongodb_client.notifications.insert_one(notification.dict())
+    mongodb_client.insert_one(notification.dict())
 
-    celery_app.send_task(CELERY_TASK_NAME, kwargs={"event_name": NOTIFICATION_NAME, "periodicity_days": 1})
+    notification_data = {
+        "id": notification.notification_id,
+        "user_id": notification.user_id,
+        "template_id": notification.template_id,
+    }
+
+    celery_app.send_task(
+        CELERY_TASK_NAME,
+        kwargs={"notification_data": notification_data, "periodicity_days": 1},
+        countdown=5
+    )
 
     ch.basic_ack(method.delivery_tag)
