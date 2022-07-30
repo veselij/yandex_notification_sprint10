@@ -14,6 +14,8 @@ click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.2.0
 darglint==1.8.1
+dataclasses-json==0.5.7
+Deprecated==1.2.13
 Django==4.0.6
 django-celery-beat==2.3.0
 django-stubs==1.12.0
@@ -95,4 +97,3 @@ wcwidth==0.2.5
 wemake-python-styleguide==0.16.1
 wrapt==1.14.1
 gunicorn
-flake8-html

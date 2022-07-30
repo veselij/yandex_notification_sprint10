@@ -17,7 +17,9 @@ logger = get_task_logger(__name__)
 
 
 @shared_task(base=MongoTaskWithRetry)
-def schedule_notifications(event_name: str, periodicity_days: int, use_timezone: bool = True) -> None:
+def schedule_notifications(
+    event_name: str, periodicity_days: int, use_timezone: bool = True
+) -> None:
     notification_client = NotificationClient(schedule_notifications.db)  # type: ignore
     for notification in notification_client.get_notifications(event_name):
         _schedule_notification.delay(notification.dict(), periodicity_days, use_timezone)  # type: ignore
@@ -57,7 +59,7 @@ def _get_latest_content(
             not last_update
             or datetime.now().timestamp() - last_update > periodicity_days * 24 * 3600
         ):
-            task.apply_async(
+            task.apply_async(  # type: ignore
                 (user_data, notification_data, content["content_value"]),
                 link=_update_send_status_callback.s(),  # type: ignore
                 eta=datetime.utcnow() + timedelta(hours=userdata.timezone),
