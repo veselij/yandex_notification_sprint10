@@ -50,7 +50,6 @@ def _get_latest_content(
     notification_data: dict, user_data: dict, periodicity_days: int
 ):
     notification = Notification(**notification_data)
-    userdata = UserData(**user_data)
     notification_client = NotificationClient(_get_latest_content.db)  # type: ignore
     content = notification_client.get_notification_content(notification.id)
     for task_name, task in notification_tasks_registry.items():
@@ -62,7 +61,6 @@ def _get_latest_content(
             task.apply_async(  # type: ignore
                 (user_data, notification_data, content["content_value"]),
                 link=_update_send_status_callback.s(),  # type: ignore
-                eta=datetime.utcnow() + timedelta(hours=userdata.timezone),
             )  # type: ignore
 
 
