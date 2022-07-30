@@ -18,4 +18,3 @@ capture_output = True
 pidfile = "/var/run/gunicorn/gunicorn.pid"
 # Daemonize the Gunicorn process (detach & enter background)
 daemon = True
-

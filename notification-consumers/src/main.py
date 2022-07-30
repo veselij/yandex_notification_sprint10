@@ -1,6 +1,6 @@
 import logging
-import pika
 
+import pika
 from core.config import ADMIN_QUEUE, RABBITMQ, UGC_COMMENT_LIKE_QUEUE, WELCOME_QUEUE
 from workers.admin import callback as admin_callback
 from workers.likes import callback as likes_callback
@@ -29,5 +29,5 @@ def main():
     connection.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
