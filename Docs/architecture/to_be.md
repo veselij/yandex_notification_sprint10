@@ -86,6 +86,7 @@ A->>R: Publish new user event
 C->>R: Read new user event
 C->>C: processed event
 C->>M: save new notification data
+C->>Ce: triggers task to create new user in django admin
 C->>Ce: triggers notification distribution task
 Ce->>A: get user data
 A-->>Ce: send user data
