@@ -25,4 +25,31 @@ class MongoDBConnection(DBConnection):
         return self.db.find({"notification_name": event_name}, max_time_ms=10000)
 
     def get_content(self, notification_id: str) -> Any:
-        return self.db.find_one({"notification_id": notification_id}, max_time_ms=10000)
+        notification = self.db.find_one(
+            {"notification_id": notification_id}, max_time_ms=10000
+        )
+        return notification
+
+    def insert_or_update(
+        self,
+        user_id: str,
+        notification_id: str,
+        notification_name: str,
+        content_id: str,
+        content_value: str,
+        template_id: str,
+    ) -> Any:
+        self.db.update_one(
+            {"notification_name": notification_name, "user_id": user_id},
+            {
+                "$set": {
+                    "notification_id": notification_id,
+                    "notification_name": notification_name,
+                    "user_id": user_id,
+                    "content_id": content_id,
+                    "content_value": content_value,
+                    "template_id": template_id,
+                }
+            },
+            upsert=True,
+        )

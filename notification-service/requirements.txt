@@ -18,6 +18,8 @@ dataclasses-json==0.5.7
 Deprecated==1.2.13
 Django==4.0.6
 django-celery-beat==2.3.0
+django-ckeditor==6.4.2
+django-js-asset==2.0.0
 django-stubs==1.12.0
 django-stubs-ext==0.5.0
 django-timezone-field==5.0
@@ -33,6 +35,7 @@ flake8-comprehensions==3.10.0
 flake8-debugger==4.1.2
 flake8-docstrings==1.6.0
 flake8-eradicate==1.2.1
+flake8-html==0.4.2
 flake8-isort==4.1.1
 flake8-polyfill==1.0.2
 flake8-quotes==3.3.1
@@ -44,7 +47,9 @@ gunicorn==20.1.0
 idna==3.3
 iniconfig==1.1.1
 isort==5.10.1
+Jinja2==3.1.2
 kombu==5.2.4
+MarkupSafe==2.1.1
 marshmallow==3.17.0
 marshmallow-enum==1.5.1
 mccabe==0.6.1
@@ -102,4 +107,3 @@ vine==5.0.0
 wcwidth==0.2.5
 wemake-python-styleguide==0.16.1
 wrapt==1.14.1
-flake8-html

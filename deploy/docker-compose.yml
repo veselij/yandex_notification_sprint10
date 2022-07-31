@@ -8,14 +8,8 @@ services:
     volumes:
       - rabbit-data:/var/lib/rabbitmq/
       - rabbit-log:/var/log/rabbitmq
-
-  redis:
-    image: 'bitnami/redis:latest'
-    hostname: redis
-    expose:
-      - 6379
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+      - RABBITMQ_DEFAULT_VHOST=vhost
 
   postgres:
     image: postgres:13
@@ -50,6 +44,8 @@ services:
   notification-consumers:
     build:
       context: ../notification-consumers
+    env_file:
+      - .env
     command: >
       python main.py
 
@@ -65,8 +61,6 @@ services:
     depends_on:
       rabbitmq:
         condition: service_started
-      redis:
-        condition: service_started
       mongodb:
         condition: service_healthy
 
@@ -76,7 +70,7 @@ services:
     env_file:
       - ../notification-service/.env
     command: >
-      celery -A config -b "redis://redis:6379/0" worker -l DEBUG
+      celery -A config -b "amqp://rabbitmq:5672/vhost" worker -l DEBUG
 
 volumes:
   postgres:
