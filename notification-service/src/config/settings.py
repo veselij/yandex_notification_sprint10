@@ -18,7 +18,7 @@ FAKE_API = os.environ.get("FAKE_API", "True") == "True"
 FAKE_EMAIL_PROVIDER = os.environ.get("FAKE_EMAIL_PROVIDER", "True") == "True"
 
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1 localhost").split(" ")
 
 
 # Application definition

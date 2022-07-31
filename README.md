@@ -38,5 +38,5 @@ docker-compose up
 4. Разработчик [soltanat](https://github.com/soltanat)
 
 ## Change log
-1. 31.01.2022:
+1. 31.07.2022:
     - первый релиз
