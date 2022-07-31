@@ -12,7 +12,7 @@ RUN mkdir $HOME/static && chown -R web:web $HOME/static
 WORKDIR $HOME
 
 COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt --no-cache-dir
 
 COPY src .
 COPY ./entrypoint.sh /usr/local/bin

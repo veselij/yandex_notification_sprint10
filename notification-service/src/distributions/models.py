@@ -11,18 +11,26 @@ class Channels(models.TextChoices):
     sms = "sms", _("sms")
 
 
-class NotificationTemplates(models.Model):
+class TimeStampedMixin(models.Model):
+    """Mixin to extend class models with date fields create and modified."""
+
+    name = models.CharField(_("name"), max_length=255)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class NotificationTemplates(TimeStampedMixin):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(_("name"), max_length=255)
     subject = models.CharField(_("subject"), max_length=255)
     content = RichTextField(
         _("content"),
         help_text="в шаблоне можно использовать переменные {{name}} - имя и {{content}} - содержание уведомления",
     )
     channel = models.TextField(_("channel"), choices=Channels.choices, max_length=8)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _("Template")
@@ -38,18 +46,15 @@ class AuthUser(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 
-class NotificaionDistribution(models.Model):
+class NotificaionDistribution(TimeStampedMixin):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(_("name"), max_length=255)
     content = RichTextField(
         _("content"),
     )
     template = models.ForeignKey(
         NotificationTemplates, on_delete=models.CASCADE, verbose_name=_("template")
     )
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _("NotificaionDistribution")

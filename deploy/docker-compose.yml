@@ -12,7 +12,7 @@ services:
       - RABBITMQ_DEFAULT_VHOST=vhost
 
   postgres:
-    image: postgres:13
+    image: postgres:13-alpine
     hostname: postgres
     expose:
       - 5432
