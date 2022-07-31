@@ -15,7 +15,7 @@ def send_email(
     user_data: dict, notification_data: dict, content_value: str
 ) -> NotificationResult:
     notification = Notification(**notification_data)
-    template = JinjaTemplate(notification.template_id)
+    template = JinjaTemplate(notification.template_id, "email")
     return send(user_data, template, notification.id, EmailSender, content_value)
 
 

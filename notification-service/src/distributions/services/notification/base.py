@@ -16,6 +16,17 @@ class DBConnection(Protocol):
     def get_content(self, notification_id: str) -> Any:
         ...
 
+    def insert_or_update(
+        self,
+        user_id: str,
+        notification_id: str,
+        notification_name: str,
+        content_id: str,
+        content_value: str,
+        template_id: str,
+    ) -> Any:
+        ...
+
 
 class Notification(BaseModel):
     class Config:
@@ -42,6 +53,18 @@ class BaseNotificaionClient(ABC):
     def get_notification_content(self, notification_id: str) -> dict:
         ...
 
+    @abstractmethod
+    def insert_or_update_notification(
+        self,
+        user_id: str,
+        notification_id: str,
+        notification_name: str,
+        content_id: str,
+        content_value: str,
+        template_id: str,
+    ) -> None:
+        ...
+
 
 class NotificationClient(BaseNotificaionClient):
     def get_notifications(self, event_name: str) -> Generator[Notification, None, None]:
@@ -57,3 +80,21 @@ class NotificationClient(BaseNotificaionClient):
 
     def get_notification_content(self, notification_id: str) -> dict:
         return self.db.get_content(notification_id)
+
+    def insert_or_update_notification(
+        self,
+        user_id: str,
+        notification_id: str,
+        notification_name: str,
+        content_id: str,
+        content_value: str,
+        template_id: str,
+    ) -> None:
+        self.db.insert_or_update(
+            user_id,
+            notification_id,
+            notification_name,
+            content_id,
+            content_value,
+            template_id,
+        )

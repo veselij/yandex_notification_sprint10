@@ -8,7 +8,9 @@ from workers.welcome import callback as welcome_callback
 
 
 def main():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ))
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(host=RABBITMQ, virtual_host="vhost")
+    )
     channel = connection.channel()
 
     channel.queue_declare(UGC_COMMENT_LIKE_QUEUE, durable=True)

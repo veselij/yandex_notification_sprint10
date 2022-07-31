@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_celery_beat",
+    "ckeditor",
     "distributions.apps.DistributionsConfig",
 ]
 

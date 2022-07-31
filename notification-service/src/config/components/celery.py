@@ -1,3 +1,3 @@
 from config.settings import broker_host, broker_port
 
-broker_url = f"redis://{broker_host}:{broker_port}/0"
+broker_url = f"amqp://{broker_host}:{broker_port}/vhost"

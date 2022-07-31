@@ -8,5 +8,5 @@ python manage.py collectstatic --noinput
 
 echo "Start gunicorn server"
 gunicorn -c config/gunicorn.py
-celery -A config -b "redis://redis:6379/0" beat --scheduler django_celery_beat.schedulers:DatabaseScheduler
+celery -A config -b "amqp://rabbitmq:5672/vhost" beat --scheduler django_celery_beat.schedulers:DatabaseScheduler
 exec "$@"
