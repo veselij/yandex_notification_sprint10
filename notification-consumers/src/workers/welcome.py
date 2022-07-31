@@ -22,7 +22,7 @@ def callback(ch, method, properties, body):
         content_value=message.content_value,
         template_id=message.template_id,
     )
-    result = mongodb_client.insert_one(notification.dict())
+    mongodb_client.insert_one(notification.dict())
 
     notification_data = {
         "id": notification.notification_id,
